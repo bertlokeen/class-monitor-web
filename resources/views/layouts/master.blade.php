@@ -30,6 +30,10 @@
             left: 0;
             right: 0;
         }
+
+        .img {
+            width: 540px;
+        }
     </style>
 </head>
 
@@ -70,6 +74,10 @@
                         </div>
                     </form>
                 </div>
+            </div>
+
+            <div class="col-md-6" style="margin-top: -140px">
+                <img class="img img-fluid float-right" src="{{ asset('assets/img/mcu.png') }}" alt="mcu_logo">
             </div>
         </div>
     </div>
