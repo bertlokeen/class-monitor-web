@@ -17,12 +17,6 @@
     <link href="{{ asset('assets/css/material-kit.min.css') }}" rel="stylesheet"/>
 
     <style>
-        .page-bg {
-            background-image: url({{ asset('assets/img/university.jpg') }});
-            background-size: cover;
-            background-position: top center;
-        }
-
         .footer-bottom {
             color: white;
             position: absolute;
@@ -30,54 +24,18 @@
             left: 0;
             right: 0;
         }
-
-        .img {
-            width: 540px;
-        }
     </style>
 </head>
 
 <body>
-<div class="page-header header-filter purple-filter page-bg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4 col-md-6">
-                <div class="card card-login">
-                    <form class="form" method="" action="">
-                        <div class="card-header card-header-warning text-center">
-                            <h4 class="card-title">Login</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                      <i class="material-icons">mail</i>
-                                    </span>
-                                </div>
-                                <input type="email" class="form-control" placeholder="Email...">
-                            </div>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                      <i class="material-icons">lock_outline</i>
-                                    </span>
-                                </div>
-                                <input type="password" class="form-control" placeholder="Password...">
-                            </div>
-                        </div>
-                        <div class="footer text-center">
-                            <a href="#">Forgot password?</a>
-                        </div>
-                        <div class="footer text-center">
-                            <button class="btn btn-warning">Sign In</button>
-                            <button class="btn btn-warning">Sign Up</button>
-                        </div>
-                    </form>
+<div class="main">
+    @include('partials.nav')
+    <div class="main">
+        <div class="container">
+            <div class="section text-center">
+                <div class="row">
+                    @yield('content')
                 </div>
-            </div>
-
-            <div class="col-md-6" style="margin-top: -140px">
-                <img class="img img-fluid float-right" src="{{ asset('assets/img/mcu.png') }}" alt="mcu_logo">
             </div>
         </div>
     </div>
