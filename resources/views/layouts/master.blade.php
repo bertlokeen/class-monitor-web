@@ -14,7 +14,10 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
 
+    <link href="{{ asset('css/material-dashboard.css') }}" rel="stylesheet"/>
+    
     <link href="{{ asset('assets/css/material-kit.min.css') }}" rel="stylesheet"/>
+
 
     <style>
         .footer-bottom {
@@ -24,6 +27,10 @@
             left: 0;
             right: 0;
         }
+
+        .main {
+            background-color: #eeeeee;
+        }
     </style>
 </head>
 
@@ -32,23 +39,25 @@
     @include('partials.nav')
     <div class="main">
         <div class="container">
-            <div class="section text-center">
-                <div class="row">
-                    @yield('content')
-                </div>
+            <div class="row">
+                <h2>@yield('header')</h2>
+            </div>
+            <div class="row">
+                @yield('content')
             </div>
         </div>
     </div>
-    <footer class="footer-bottom">
-        <div class="container">
-            <div class="copyright">
-                &copy;
-                <script>
-                    document.write(new Date().getFullYear())
-                </script> Class Monitor
-            </div>
+
+    <footer class="footer">
+        <div class="container-fluid">
+          <div class="copyright float-center">
+            ©
+            <script>
+              document.write(new Date().getFullYear())
+            </script> Class Monitor
+          </div>
         </div>
-    </footer>
+      </footer>
 </div>
 
 <script src="{{ asset('assets/js/core/jquery.min.js') }}" type="text/javascript"></script>
@@ -59,6 +68,14 @@
 <script src="{{ asset('assets/js/plugins/nouislider.min.js') }}" type="text/javascript"></script>
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <script src="{{ asset('assets/js/material-kit.js?v=2.0.5') }}" type="text/javascript"></script>
+
+
+<script>
+    $(document).ready(function() {
+        materialKit.initFormExtendedDatetimepickers();
+    });
+
+</script>
 
 </body>
 
