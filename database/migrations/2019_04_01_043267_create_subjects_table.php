@@ -20,6 +20,8 @@ class CreateSubjectsTable extends Migration
             $table->json('schedules')->nullable();
             $table->string('time')->nullable();
             $table->timestamps();
+            
+            $table->foreign('faculty_id')->references('id')->on('faculties')->onDelete('set null');
         });
     }
 

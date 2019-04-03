@@ -25,32 +25,31 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth')->name('dashboard');
 
-Route::group(['prefix' => 'announcements', 'middleware' => 'auth'], function() {
-    Route::get('/', 'AnnouncementController@index')->name('announcements');
-    Route::get('/create', 'AnnouncementController@create')->name('announcements.create');
-    Route::post('/create', 'AnnouncementController@store')->name('announcements.store');
-    Route::delete('/{announcement}', 'AnnouncementController@destroy')->name('announcements.delete');
-    Route::post('/{announcement}/comment', 'AnnouncementController@comment')->name('announcements.comment.store');
-    Route::post('/{announcement}/like', 'AnnouncementController@like')->name('announcements.likes.store');
-});
 
-Route::group(['prefix' => 'students', 'middleware' => 'auth'], function() {
-    Route::get('/', 'StudentController@index')->name('students');
+Route::group(['middleware' => 'auth'], function() {
 
-    Route::get('/create', 'StudentController@create')->name('students.create');
-    Route::post('/create', 'StudentController@store')->name('students.store');
-});
+    Route::resource('admin', 'AdminController', ['middleware' => ['role:admin']]);
 
-Route::group(['prefix' => 'faculty', 'middleware' => 'auth'], function() {
-    Route::get('/', 'FacultyController@index')->name('faculty');
+    Route::group(['prefix' => 'announcements'], function() {
+        Route::get('/', 'AnnouncementController@index')->name('announcements');
+        Route::get('/create', 'AnnouncementController@create')->name('announcements.create');
+        Route::post('/create', 'AnnouncementController@store')->name('announcements.store');
+        Route::delete('/{announcement}', 'AnnouncementController@destroy')->name('announcements.delete');
+        Route::post('/{announcement}/comment', 'AnnouncementController@comment')->name('announcements.comment.store');
+        Route::post('/{announcement}/like', 'AnnouncementController@like')->name('announcements.likes.store');
+    });
 
-    Route::get('/create', 'FacultyController@create')->name('faculty.create');
-    Route::post('/create', 'FacultyController@store')->name('faculty.store');
-});
+    Route::resource('/students', 'StudentController');
 
-Route::group(['prefix' => 'sections', 'middleware' => 'auth'], function() {
-    Route::get('/', 'SectionController@index')->name('sections');
+    Route::group(['prefix' => 'faculty'], function() {
+        Route::get('/', 'FacultyController@index')->name('faculty.index');
+        Route::get('/create', 'FacultyController@create')->name('faculty.create');
+        Route::post('/create', 'FacultyController@store')->name('faculty.store');
+        Route::get('/{faculty}', 'FacultyController@show')->name('faculty.show');
+        Route::get('/{faculty}/edit', 'FacultyController@edit')->name('faculty.edit');
+        Route::put('/{faculty}', 'FacultyController@update')->name('faculty.update');
+        Route::delete('/{faculty}', 'FacultyController@destroy')->name('faculty.destroy');
+    });
 
-    Route::get('/create', 'SectionController@create')->name('sections.create');
-    Route::post('/create', 'SectionController@store')->name('sections.store');
+    Route::resource('/subjects', 'SubjectController');
 });

@@ -1,11 +1,19 @@
 @extends('layouts.master') 
-@section('header', 'Create Student Profile') 
+@section('breadcrumbs')
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{ route('admin.index') }}">Admins</a></li>
+    <li class="breadcrumb-item text-warning" aria-current="page">Add</li>
+  </ol>
+</nav>
+@endsection
+ 
 @section('content')
 <div class="col-md-8" style="margin: auto;">
   <div class="card">
     <div class="card-header card-header-primary">
-      <h4 class="card-title">Create Profile</h4>
-      <p class="card-category">Student Information</p>
+      <h4 class="card-title">Profile</h4>
+      <p class="card-category">Admin Information</p>
     </div>
     <div class="card-body">
       <div class="container">
@@ -25,13 +33,37 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true"><i class="material-icons">clear</i></span>
               </button>
-            <b>Student created successfully!</b>
+            <b>Admin created successfully!</b>
           </div>
         </div>
         @endif
       </div>
-      <form method="POST" action="{{ route('students.store') }}">
+      <form method="POST" action="{{ route('admin.store') }}">
         @csrf
+        <h3>Account Credentials</h3>
+        <hr>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group bmd-form-group {{ $errors->has('email') ? ' has-danger' : '' }}">
+              <label class="bmd-label-floating">Email *</label>
+              <input type="email" class="form-control" name="email" value="{{ old('email') }}" />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group bmd-form-group {{ $errors->has('password') ? ' has-danger' : '' }}">
+              <label class="bmd-label-floating">Password *</label>
+              <input type="password" class="form-control" name="password" value="{{ old('password') }}" />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group bmd-form-group {{ $errors->has('password_confirmation') ? ' has-danger' : '' }}">
+              <label class="bmd-label-floating">Confirm Password *</label>
+              <input type="password" class="form-control" name="password_confirmation" value="{{ old('password_confirmation') }}" />
+            </div>
+          </div>
+        </div>
+        <h3>Basic Information</h3>
+        <hr>
         <div class="row">
           <div class="col-md-4">
             <div class="form-group bmd-form-group {{ $errors->has('first_name') ? ' has-danger' : '' }}">
@@ -96,19 +128,11 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group bmd-form-group">
-              <label class="bmd-label-floating">Skills </label>
-              <input class="form-control" name="skills" value="{{ old('skills') }}" />
-              <span class="text-info">Separated by comma *</span>
-            </div>
-          </div>
-        </div>
         <button type="submit" class="btn btn-warning pull-right">Submit</button>
         <div class="clearfix"></div>
       </form>
     </div>
   </div>
+</div>
 </div>
 @endsection

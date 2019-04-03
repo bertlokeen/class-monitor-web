@@ -36,7 +36,7 @@ class FacultyController extends Controller
         $user = User::create([
             'first_name' => $request->get('first_name'),
             'middle_name' => $request->get('middle_name'),
-            'last_name' => $request->get('middle_name'),
+            'last_name' => $request->get('last_name'),
             'address' => $request->get('address'),
             'father_name' => $request->get('father_name'),
             'mother_name' => $request->get('mother_name'),
@@ -45,36 +45,59 @@ class FacultyController extends Controller
         ]);
 
         $faculty = Faculty::create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'bio' => $request->get('bio')
         ]);
 
         $user->assignRole('faculty');
 
-        $user->userable()->create([
-            'userable_type' => get_class($faculty),
-            'userable_id' => $faculty->id
-        ]);
-
         return redirect()->back()->with('status', 'success');
     }
 
-    public function show($id)
+    public function show(Faculty $faculty)
     {
-        //
+        return view('faculties.show', compact('faculty'));
     }
 
-    public function edit($id)
+    public function edit(Faculty $faculty)
     {
-        //
+        return view('faculties.edit', compact('faculty'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Faculty $faculty)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|min:2|max:255',
+            'middle_name' => 'max:255',
+            'last_name' => 'required|min:2|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors())->withInput();
+        }
+
+        $faculty->user->update([
+            'first_name' => $request->get('first_name'),
+            'middle_name' => $request->get('middle_name'),
+            'last_name' => $request->get('last_name'),
+            'address' => $request->get('address'),
+            'father_name' => $request->get('father_name'),
+            'mother_name' => $request->get('mother_name'),
+            'date_of_birth' => $request->get('date_of_birth'),
+            'place_of_birth' => $request->get('place_of_birth')
+        ]);
+
+        $faculty->update([
+            'bio' => $request->get('bio')
+        ]);
+
+        return redirect()->route('faculty.show', $faculty->id)->with('status', 'success');
     }
 
-    public function destroy($id)
+    public function destroy(Faculty $faculty)
     {
-        //
+        $faculty->delete();
+
+        return redirect()->route('faculty.index')->with('status', 'success');
     }
 }

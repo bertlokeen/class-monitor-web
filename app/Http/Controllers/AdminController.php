@@ -3,28 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\Models\Student;
-use Carbon\Carbon;
+use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Validator;
 
-class StudentController extends Controller
+class AdminController extends Controller
 {
     public function index()
     {
-        $students = Student::orderBy('created_at', 'desc')->with('user')->paginate(20);
+        $admins = Admin::orderBy('created_at', 'desc')->with('user')->paginate(20);
 
-        return view('students.index', compact('students'));
+        return view('admins.index', compact('admins'));
     }
 
     public function create()
     {
-        return view('students.create');
+        return view('admins.create');
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
             'first_name' => 'required|min:2|max:255',
             'middle_name' => 'max:255',
             'last_name' => 'required|min:2|max:255'
@@ -35,45 +38,43 @@ class StudentController extends Controller
         }
 
         $user = User::create([
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
             'first_name' => $request->get('first_name'),
             'middle_name' => $request->get('middle_name'),
             'last_name' => $request->get('last_name'),
             'address' => $request->get('address'),
             'father_name' => $request->get('father_name'),
             'mother_name' => $request->get('mother_name'),
-            'date_of_birth' => Carbon::parse($request->get('date_of_birth')),
+            'date_of_birth' => $request->get('date_of_birth'),
             'place_of_birth' => $request->get('place_of_birth')
         ]);
 
-        $student = Student::create([
+        $admin = Admin::create([
             'user_id' => $user->id,
-            'bio' => $request->get('bio'),
-            'skills' => $request->get('skills')
+            'bio' => $request->get('bio')
         ]);
 
-        $user->assignRole('student');
+        $user->assignRole('admin');
 
-        $user->userable()->create([
-            'userable_type' => get_class($student),
-            'userable_id' => $student->id
-        ]);
-
-        return redirect()->back()->with('status', 'success');
+        return redirect()->route('admin.show', $admin->id)->with('status', 'success');
     }
 
-    public function show(Student $student)
+    public function show(Admin $admin)
     {
-        return view('students.show', compact('student'));
+        return view('admins.show', compact('admin'));
     }
-
-    public function edit(Student $student)
+    
+    public function edit(Admin $admin)
     {
-        return view('students.edit', compact('student'));
+        return view('admins.edit', compact('admin'));
     }
 
-    public function update(Request $request, Student $student)
+    public function update(Request $request, Admin $admin)
     {
         $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255|', Rule::unique('users')->ignore($admin->user->id),
+            'password' => $request->filled('password') ? 'string|min:6|confirmed' : '',
             'first_name' => 'required|min:2|max:255',
             'middle_name' => 'max:255',
             'last_name' => 'required|min:2|max:255'
@@ -82,30 +83,34 @@ class StudentController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator->errors())->withInput();
         }
-
-        $student->user->update([
+        
+        $admin->user->update([
+            'email' => $request->get('email'),
             'first_name' => $request->get('first_name'),
             'middle_name' => $request->get('middle_name'),
             'last_name' => $request->get('last_name'),
             'address' => $request->get('address'),
             'father_name' => $request->get('father_name'),
             'mother_name' => $request->get('mother_name'),
-            'date_of_birth' => Carbon::parse($request->get('date_of_birth')),
+            'date_of_birth' => $request->get('date_of_birth'),
             'place_of_birth' => $request->get('place_of_birth')
         ]);
 
-        $student->update([
-            'bio' => $request->get('bio'),
-            'skills' => $request->get('skills')
+        if($request->filled('password')) {
+            $admin->user->update(['password' => Hash::make($request->get('password'))]);
+        }
+
+        $admin->update([
+            'bio' => $request->get('bio')
         ]);
 
-        return redirect()->route('students.show', $student->id)->with('status', 'success');
+        return redirect()->route('admin.show', $admin->id)->with('status', 'success');
     }
 
-    public function destroy(Student $student)
+    public function destroy(Admin $admin)
     {
-        $student->delete();
+        $admin->delete();
 
-        return redirect()->route('students.index')->with('status', 'success');
+        return redirect()->route('admin.index')->with('status', 'success');
     }
 }

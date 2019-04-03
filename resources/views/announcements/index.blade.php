@@ -1,63 +1,58 @@
-@extends('layouts.master')
-
-@section('header', 'Faculties')
-
+@extends('layouts.master') 
+@section('header', 'Announcements') 
 @section('content')
 <div class="col-md-12">
   <div class="card">
-    <div class="card-header card-header-warning">
+    <div class="card-header card-header-primary">
       <h4 class="card-title mt-0">Announcements </h4>
       <p class="card-category"> </p>
     </div>
     <div class="card-body">
       <div class="col-md-10 m-auto">
         @if($errors->any())
-            <div class="alert alert-danger">
-              <div class="container">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <div class="alert alert-danger">
+          <div class="container">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true"><i class="material-icons">clear</i></span>
-                </button>
-                @foreach($errors->all() as $error)
-                  <li>{{ $error }}</li>
-                @endforeach
-              </div>
-            </div>
-          @endif
-
-        @if(session('status'))
-          <div class="alert alert-success text-default">
-            <div class="container">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                </button> @foreach($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+          </div>
+        </div>
+        @endif @if(session('status'))
+        <div class="alert alert-success text-default">
+          <div class="container">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true"><i class="material-icons">clear</i></span>
               </button>
-              <b>Announcement posted successfully!</b>
-            </div>
+            <b>Announcement posted successfully!</b>
           </div>
-          @endif
+        </div>
+        @endif
         <div class="card">
           <div class="card-body">
             <h4 class="card-title text-primary">Post Announcement</h4>
             <form method="POST" action="{{ route('announcements.store') }}">
-            @csrf
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group bmd-form-group {{ $errors->has('title') ? ' has-danger' : '' }}">
-                  <label class="bmd-label-floating">Title *</label>
-                  <input type="text" class="form-control" name="title" value="{{ old('title') }}" required/>
+              @csrf
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group bmd-form-group {{ $errors->has('title') ? ' has-danger' : '' }}">
+                    <label class="bmd-label-floating">Title *</label>
+                    <input type="text" class="form-control" name="title" value="{{ old('title') }}" required/>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group bmd-form-group">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group bmd-form-group">
                     <label class="bmd-label-floating"> Content *</label>
                     <textarea class="form-control" rows="2" name="content" value="{{ old('content') }}" required></textarea>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-12 text-right">
-              <button type="submit" class="btn btn-sm btn-warning">Post </button>
-            </div>
+              <div class="col-md-12 text-right">
+                <button type="submit" class="btn btn-sm btn-warning">Post </button>
+              </div>
             </form>
           </div>
         </div>
@@ -75,12 +70,13 @@
               <p>{{ $announcement->content }}</p>
               <div class="card-stats">
                 <div class="author">
-                    <a href="#">
+                  <a href="#">
                       <span class="text-warning">{{ $announcement->user->fullname() }}, {{ ucfirst(request()->user()->roles->first()->name) }}  ·  {{ $announcement->created_at->diffForHumans() }}</span>
                     </a>
                 </div>
                 <div class="stats ml-auto">
-                  <form id="like-form{{ $announcement->id }}" action="{{ route('announcements.likes.store', $announcement->id) }}" method="POST" onsubmit="return confirm('?');" style="display: none;">
+                  <form id="like-form{{ $announcement->id }}" action="{{ route('announcements.likes.store', $announcement->id) }}" method="POST"
+                    onsubmit="return confirm('?');" style="display: none;">
                     @csrf
                   </form>
                   <a class="pr-1" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('like-form{{ $announcement->id }}').submit();">
@@ -95,7 +91,9 @@
                 <div class="col-md-12 comments pt-4 mt-4" style="border: 1px solid #962eaf; border-radius: 4px;">
                   @foreach($announcement->comments as $comment)
                   <div class="comment p-1 m-1">
-                    <p class="text-primary">{{ $comment->user->fullname() }}, {{ ucfirst($comment->user->roles->first()->name) }} · {{ $comment->created_at->diffForHumans() }}</p>
+                    <p class="text-primary">{{ $comment->user->fullname() }}, {{ ucfirst($comment->user->roles->first()->name) }} · {{ $comment->created_at->diffForHumans()
+                      }}
+                    </p>
                     <p>{{ $comment->body }}</p>
                   </div>
                   @endforeach
@@ -120,14 +118,14 @@
                 </form>
               </div>
             </div>
-           </div>
+          </div>
         </div>
         @endforeach
       </div>
       <div class="row" style="float: right">
         {{ $announcements->links() }}
       </div>
-    </div>  
+    </div>
   </div>
 </div>
 @endsection

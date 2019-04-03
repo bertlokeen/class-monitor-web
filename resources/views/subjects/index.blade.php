@@ -1,49 +1,63 @@
-@extends('layouts.master')
-
-@section('header', 'Subjects')
-
+@extends('layouts.master') 
+@section('breadcrumbs')
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item text-primary" aria-current="page">Subjects</li>
+  </ol>
+</nav>
+@endsection
+ 
 @section('content')
 <div class="col-md-12">
   <div class="card">
-    <div class="card-header card-header-warning">
+    <div class="card-header card-header-primary">
       <span class="actions float-right">
-        <button class="btn btn-primary">
-          <i class="material-icons">add</i> Add Subjects
-        </button>
+        <a href="{{ route('subjects.create') }}" class="btn btn-warning">
+          <i class="material-icons">add</i> Add Subject
+        </a>
       </span>
-      <h4 class="card-title mt-0"> Subjects List</h4>
-      <p class="card-category"> Showing 10 out of 120</p>
+      <h4 class="card-title mt-0"> Subject List</h4>
+      <p class="card-category"> Showing {{ $subjects->count() }} out of {{ $subjects->total() }}</p>
     </div>
     <div class="card-body">
       <div class="table-responsive">
         <table class="table table-hover">
-          <thead class="">
+          <thead class="text-primary">
             <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Program</th>
-            <th>Year</th>
-            <th>Section</th>
-            <th style="width: 12%">Action</th>
-          </tr>
-        </thead>
+              <th>#</th>
+              <th>Name</th>
+              <th>Instructor</th>
+              <th>Units</th>
+              <th>Schedule</th>
+              <th>Time</th>
+              <th>Action</th>
+            </tr>
+          </thead>
           <tbody>
-            @for($i = 0; $i <=10; $i++)
-            <tr>
-              <td>{{ $i }}</td>
-              <td>Student {{ $i }}</td>
-              <td>Student {{ $i }}</td>
-              <td>Student {{ $i }}</td>
-              <td>Student {{ $i }}</td>
-              <td>
-                <i class="material-icons text-primary pr-2">visibility</i>
-                <i class="material-icons text-warning pr-2">edit</i>
-                <i class="material-icons text-danger pr-2">delete</i>
+            @if($subjects->count() == 0)
+            <tr style="text-align: center">
+              <td colspan="6">
+                No Records Found
               </td>
             </tr>
-            @endfor
+            @endif @foreach($subjects as $key => $subject)
+            <tr>
+              <td>{{ ++$key }}</td>
+              <td>{{ $subject->name}}</td>
+              <td>{{ $subject->faculty->user->fullname() }}</td>
+              <td>{{ $subject->units }}</td>
+              <td>{{ $subject->schedules() }}</td>
+              <td>{{ $subject->time }}</td>
+              <td>
+                <a href="{{ route('subjects.show', $subject->id) }}"><i class="material-icons text-primary pr-2" onMouseOver='this.classList.remove("text-primary"); this.classList.add("text-warning");' onMouseOut='this.classList.add("text-primary");'>visibility</i></a>
+              </td>
+            </tr>
+            @endforeach
           </tbody>
         </table>
+      </div>
+      <div class="row" style="float: right">
+        {{ $subjects->links() }}
       </div>
     </div>
   </div>
