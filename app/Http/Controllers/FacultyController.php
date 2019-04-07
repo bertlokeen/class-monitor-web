@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Models\Faculty;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Validator;
 
 class FacultyController extends Controller
@@ -24,6 +26,8 @@ class FacultyController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
             'first_name' => 'required|min:2|max:255',
             'middle_name' => 'max:255',
             'last_name' => 'required|min:2|max:255'
@@ -34,6 +38,8 @@ class FacultyController extends Controller
         }
 
         $user = User::create([
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
             'first_name' => $request->get('first_name'),
             'middle_name' => $request->get('middle_name'),
             'last_name' => $request->get('last_name'),
@@ -67,6 +73,8 @@ class FacultyController extends Controller
     public function update(Request $request, Faculty $faculty)
     {
         $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255|', Rule::unique('users')->ignore($faculty->user->id),
+            'password' => $request->filled('password') ? 'string|min:6|confirmed' : '',
             'first_name' => 'required|min:2|max:255',
             'middle_name' => 'max:255',
             'last_name' => 'required|min:2|max:255'
@@ -77,6 +85,7 @@ class FacultyController extends Controller
         }
 
         $faculty->user->update([
+            'email' => $request->get('email'),
             'first_name' => $request->get('first_name'),
             'middle_name' => $request->get('middle_name'),
             'last_name' => $request->get('last_name'),
@@ -86,6 +95,10 @@ class FacultyController extends Controller
             'date_of_birth' => $request->get('date_of_birth'),
             'place_of_birth' => $request->get('place_of_birth')
         ]);
+
+        if($request->filled('password')) {
+            $faculty->user->update(['password' => Hash::make($request->get('password'))]);
+        }
 
         $faculty->update([
             'bio' => $request->get('bio')

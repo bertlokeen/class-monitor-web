@@ -36,6 +36,7 @@
         <div class="col-md-10 m-auto">
           <div class="card">
             <div class="card-header card-header-primary">
+              @if(auth()->user()->hasRole('admin'))
               <span class="actions float-right pt-3">
                   <a href="{{ route('subjects.edit', $subject->id) }}" class="text-white">
                     <i class="material-icons">edit</i>
@@ -48,7 +49,7 @@
                       @csrf
                       {{ method_field('DELETE') }}
                   </form>
-                </span>
+                </span> @endif
               <h4 class="card-title">Subject</h4>
               <p class="card-category">Information</p>
             </div>
@@ -61,11 +62,13 @@
                           <i class="material-icons">info</i> Information
                         </a>
                     </li>
+                    @if(auth()->user()->hasRole(['admin', 'faculty']))
                     <li class="nav-item">
-                      <a class="nav-link" href="#attendance" role="tab" data-toggle="tab">
+                      <a class="nav-link" href="#classes" role="tab" data-toggle="tab">
                           <i class="material-icons">date_range</i> Classes
                         </a>
                     </li>
+                    @endif
                   </ul>
                 </div>
                 <div class="tab-content tab-space">
@@ -110,7 +113,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="tab-pane" id="attendance">
+                  @if(auth()->user()->hasRole(['admin', 'faculty']))
+                  <div class="tab-pane" id="classes">
                     <div class="row">
                       <div class="col-md-12">
                         <hr>
@@ -119,26 +123,33 @@
                             <thead class="text-primary">
                               <tr>
                                 <th>#</th>
-                                <th>Subject</th>
-                                <th>Schedule</th>
-                                <th>Class</th>
+                                <th>Course</th>
+                                <th>Year</th>
+                                <th>Section</th>
+                                <th>Student Count</th>
+                                <th>Action</th>
                               </tr>
                             </thead>
                             <tbody>
-                              @for($i = 0; $i
-                              <=9; $i++) <tr>
-                                <td>{{ $i }}</td>
-                                <td>{{ $subject->name }}</td>
-                                <td> - </td>
-                                <td> - </td>
-                                </tr>
-                                @endfor
+                              @foreach($subject->classes as $key => $class)
+                              <tr>
+                                <td>{{ ++$key }}</td>
+                                <td>{{ $class->course }}</td>
+                                <td>{{ $class->year }}</td>
+                                <td>{{ $class->section }}</td>
+                                <td>{{ $class->students->count() }}</td>
+                                <td>
+                                  <a href="{{ route('classes.show', $class->id) }}"><i class="material-icons text-primary pr-2" onMouseOver='this.classList.remove("text-primary"); this.classList.add("text-warning");' onMouseOut='this.classList.add("text-primary");'>visibility</i></a>
+                                </td>
+                              </tr>
+                              @endforeach
                             </tbody>
                           </table>
                         </div>
                       </div>
                     </div>
                   </div>
+                  @endif
                 </div>
               </div>
             </div>

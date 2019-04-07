@@ -11,11 +11,12 @@
 <div class="col-md-12">
   <div class="card">
     <div class="card-header card-header-primary">
+      @if(auth()->user()->hasRole('admin'))
       <span class="actions float-right">
         <a href="{{ route('subjects.create') }}" class="btn btn-warning">
           <i class="material-icons">add</i> Add Subject
         </a>
-      </span>
+      </span> @endif
       <h4 class="card-title mt-0"> Subject List</h4>
       <p class="card-category"> Showing {{ $subjects->count() }} out of {{ $subjects->total() }}</p>
     </div>

@@ -9,15 +9,26 @@ use Validator;
 
 class AnnouncementController extends Controller
 {
-    public function index()
+    public function index($id = null)
     {
+        $announcement = null;
+
+        if (!empty($id)) {
+            $announcement = Announcement::find($id);
+        
+            if ($announcement && !$announcement->isOwner()) {
+                return response()->json("You're not allowed to edit this announcement.");
+            }
+        
+        }
+
         $announcements = Announcement::orderBy('created_at', 'desc')->with([
             'user',
             'comments',
             'likes'
         ])->paginate(5);
 
-        return view('announcements.index', compact('announcements'));
+        return view('announcements.index', compact('announcements', 'announcement'));
     }
 
     public function store(Request $request)
@@ -31,30 +42,33 @@ class AnnouncementController extends Controller
             return back()->withErrors($validator->errors())->withInput();
         }
 
-        $announcement = Announcement::create([
-            'user_id' => $request->user()->id,
-            'title' => $request->get('title'),
-            'content' => $request->get('content')
-        ]);
+        if($request->filled('announcement_id')) {
+            $announcement = Announcement::find($request->get('announcement_id'));
 
-        return redirect()->back()->with('status', 'success');
-    }
+            $announcement->update([
+                'title' => $request->get('title'),
+                'content' => $request->get('content')
+            ]);
 
-    public function edit()
-    {
+            return redirect()->back()->with('status', 'Announcement updated successfully!');
+        } else {
+            $announcement = Announcement::create([
+                'user_id' => $request->user()->id,
+                'title' => $request->get('title'),
+                'content' => $request->get('content')
+            ]);
 
-    }
-
-    public function update(Request $request)
-    {
+            return redirect()->back()->with('status', 'Announcement posted successfully!');
+        }
         
+        return redirect()->back()->with('status', 'success');
     }
 
     public function destroy(Announcement $announcement)
     {
         $announcement->delete();
         
-        return redirect()->back();
+        return redirect()->back()->with('status', 'Successfully deleted announcement');
     }
 
     public function comment(Announcement $announcement)

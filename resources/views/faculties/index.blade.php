@@ -1,5 +1,12 @@
 @extends('layouts.master') 
-@section('header', 'Faculties') 
+@section('breadcrumbs')
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" aria-current="page">Faculties</li>
+  </ol>
+</nav>
+@endsection
+ 
 @section('content')
 <div class="col-md-12">
   <div class="card">
@@ -19,6 +26,7 @@
             <tr>
               <th>#</th>
               <th>Name</th>
+              <th>Email</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -33,6 +41,7 @@
             <tr>
               <td>{{ ++$key }}</td>
               <td>{{ $faculty->user->last_name }}, {{ $faculty->user->first_name }} {{ $faculty->user->middle_name }}</td>
+              <td>{{ $faculty->user->email }}</td>
               <td>
                 <a href="{{ route('faculty.show', $faculty->id) }}"><i class="material-icons text-primary pr-2" onMouseOver='this.classList.remove("text-primary"); this.classList.add("text-warning");' onMouseOut='this.classList.add("text-primary");'>visibility</i></a>
               </td>

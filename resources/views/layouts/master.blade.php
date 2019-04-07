@@ -19,6 +19,7 @@
 
     <link href="{{ asset('assets/css/material-kit.min.css') }}" rel="stylesheet" />
 
+    <link href="{{ asset('assets/css/Chart.min.css') }}" rel="stylesheet" />
 
     <style>
         .footer-bottom {
@@ -31,6 +32,18 @@
 
         .main {
             background-color: #eeeeee;
+        }
+
+        .reset-card-header {
+            box-shadow: none !important;
+            background: none !important;
+            padding: 0 !important;
+            margin-top: 0 !important;
+        }
+
+        .reset-card-footer {
+            padding: 0 !important;
+            padding-top: 10px !important;
         }
     </style>
 </head>
@@ -60,10 +73,13 @@
         </footer>
     </div>
 
+
     <script src="{{ asset('assets/js/core/jquery.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/core/popper.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/core/bootstrap-material-design.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/material-kit.js?v=2.0.5') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/Chart.min.js') }}" type="text/javascript"></script>
+    @yield('js')
 </body>
 
 </html>

@@ -28,7 +28,7 @@
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true"><i class="material-icons">clear</i></span>
           </button>
-          <b>Faculty updated successfully!</b>
+          <b>{{ session()->get('status') }}!</b>
         </div>
       </div>
       @endif

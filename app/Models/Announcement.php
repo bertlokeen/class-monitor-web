@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\User;
 use App\Models\Comment;
 use App\Models\Like;
-use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Announcement extends Model
@@ -36,5 +36,12 @@ class Announcement extends Model
     public function liked()
     {
         return in_array($this->user->id, $this->likes->pluck('user_id')->toArray());
+    }
+
+    public function isOwner()
+    {
+        $ids = auth()->user()->announcementIds();
+
+        return in_array($this->id, $ids);
     }
 }

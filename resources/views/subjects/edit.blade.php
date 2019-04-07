@@ -78,8 +78,7 @@
               </div>
               <div class="col-md-12" style="text-align: center">
                 <div class="form-check">
-                  @php $days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']; 
-@endphp @foreach ($days as $day)
+                  @foreach ($days as $day)
                   <label class="form-check-label ml-3 mb-2">
                   <input class="form-check-input" type="checkbox" name="schedule[day][{{ $day }}]" {{ $subject->hasSchedule($day) ? 'checked' : '' }}> {{ ucfirst($day) }}
                       <span class="form-check-sign">

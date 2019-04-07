@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Faculty;
 use App\Models\Student;
+use App\Models\SectionClass;
 use Illuminate\Database\Eloquent\Model;
 
 class Subject extends Model
@@ -23,6 +24,11 @@ class Subject extends Model
     public function schedules()
     {
         return $this->schedulesArr()->join(', ');
+    }
+
+    public function classes()
+    {
+        return $this->hasMany(SectionClass::class);
     }
 
     public function schedulesArr()

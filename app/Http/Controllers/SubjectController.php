@@ -11,7 +11,18 @@ class SubjectController extends Controller
 {
     public function index()
     {
-        $subjects = Subject::query()->paginate(20);
+        if (request()->user()->hasRole('admin')) {
+            $subjects = Subject::query()->paginate(20);
+        }
+
+        if (request()->user()->hasRole('faculty')) {
+            $subjects = request()->user()->faculty->subjects()->paginate(20);
+        }
+
+        if (request()->user()->hasRole('student')) {
+            // return $subjects = request()->user()->student->subjects();
+            $subjects = request()->user()->student->subjects()->paginate(20);
+        }
 
         return view('subjects.index', compact('subjects'));
     }
@@ -19,8 +30,9 @@ class SubjectController extends Controller
     public function create()
     {
         $faculties = Faculty::query()->with('user')->get();
+        $days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
-        return view('subjects.create', compact('faculties'));
+        return view('subjects.create', compact('faculties', 'days'));
     }
 
     public function store(Request $request)
@@ -61,8 +73,9 @@ class SubjectController extends Controller
     public function edit(Subject $subject)
     {
         $faculties = Faculty::all();
+        $days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
-        return view('subjects.edit', compact('subject', 'faculties'));
+        return view('subjects.edit', compact('subject', 'faculties', 'days'));
     }
 
     public function update(Request $request, Subject $subject)

@@ -1,5 +1,13 @@
 @extends('layouts.master') 
-@section('header', 'Create Student Profile') 
+@section('breadcrumbs')
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{ route('students.index') }}">Students</a></li>
+    <li class="breadcrumb-item text-warning" aria-current="page">Add</li>
+  </ol>
+</nav>
+@endsection
+ 
 @section('content')
 <div class="col-md-8" style="margin: auto;">
   <div class="card">
@@ -32,6 +40,64 @@
       </div>
       <form method="POST" action="{{ route('students.store') }}">
         @csrf
+        <h3>Account Credentials</h3>
+        <hr>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group bmd-form-group {{ $errors->has('email') ? ' has-danger' : '' }}">
+              <label class="bmd-label-floating">Email *</label>
+              <input type="email" class="form-control" name="email" value="{{ old('email') }}" />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group bmd-form-group {{ $errors->has('password') ? ' has-danger' : '' }}">
+              <label class="bmd-label-floating">Password *</label>
+              <input type="password" class="form-control" name="password" value="{{ old('password') }}" />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group bmd-form-group {{ $errors->has('password_confirmation') ? ' has-danger' : '' }}">
+              <label class="bmd-label-floating">Confirm Password *</label>
+              <input type="password" class="form-control" name="password_confirmation" value="{{ old('password_confirmation') }}" />
+            </div>
+          </div>
+        </div>
+        <h3>Course Year & Section</h3>
+        <hr>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <select class="form-control" name="course">
+                    <option value=""> -- </option>
+                    @foreach($courses as $course)
+                      <option value="{{ $course }}">{{ $course }}</option>
+                    @endforeach
+                  </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <select class="form-control" name="year">
+                    <option value=""> -- </option>
+                    @for($i = 1; $i <= 4; $i++)
+                      <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                  </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <select class="form-control" name="section">
+                    <option value=""> -- </option>
+                    @for($i = 1; $i <= 4; $i++)
+                      <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                  </select>
+            </div>
+          </div>
+        </div>
+        <h3>Basic Information</h3>
+        <hr>
         <div class="row">
           <div class="col-md-4">
             <div class="form-group bmd-form-group {{ $errors->has('first_name') ? ' has-danger' : '' }}">

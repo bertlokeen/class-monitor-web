@@ -53,18 +53,21 @@
           <div class="card">
             <div class="card-header card-header-primary">
               <span class="actions float-right pt-3">
+                @if(auth()->user()->hasRole(['admin', 'faculty'])) 
                   <a href="{{ route('faculty.edit', $faculty->id) }}" class="text-white">
                     <i class="material-icons">edit</i>
                   </a>&nbsp;
+                @endif
+                @if(auth()->user()->hasRole('admin'))
                   <a href="{{ route('faculty.destroy', $faculty->id) }}" class="text-white" onclick="event.preventDefault(); confirm('Are you sure you want to delete?') ? document.getElementById('delete-form').submit() : '' ">
                     <i class="material-icons">delete</i>
                   </a>
-
                   <form id="delete-form" action="{{ route('faculty.destroy', $faculty->id) }}" method="POST"  style="display: none;">
                       @csrf
                       {{ method_field('DELETE') }}
                   </form>
-                </span>
+                @endif    
+              </span>
               <h4 class="card-title">Profile</h4>
               <p class="card-category">Faculty Information</p>
             </div>
@@ -77,11 +80,13 @@
                           <i class="material-icons">info</i> Information
                         </a>
                     </li>
+                    @if(auth()->user()->hasRole(['admin', 'faculty']))
                     <li class="nav-item">
-                      <a class="nav-link" href="#attendance" role="tab" data-toggle="tab">
-                          <i class="material-icons">date_range</i> Classes
-                        </a>
+                      <a class="nav-link" href="#classes" role="tab" data-toggle="tab">
+                            <i class="material-icons">date_range</i> Classes
+                          </a>
                     </li>
+                    @endif
                   </ul>
                 </div>
                 <div class="tab-content tab-space">
@@ -120,7 +125,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="tab-pane" id="attendance">
+                  @if(auth()->user()->hasRole(['admin', 'faculty']))
+                  <div class="tab-pane" id="classes">
                     <div class="row">
                       <div class="col-md-12">
                         <hr>
@@ -151,6 +157,7 @@
                       </div>
                     </div>
                   </div>
+                  @endif
                 </div>
               </div>
             </div>

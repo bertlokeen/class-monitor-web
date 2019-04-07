@@ -1,5 +1,12 @@
 @extends('layouts.master') 
-@section('header', 'Announcements') 
+@section('breadcrumbs')
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" aria-current="page">Announcements</li>
+  </ol>
+</nav>
+@endsection
+ 
 @section('content')
 <div class="col-md-12">
   <div class="card">
@@ -25,10 +32,10 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true"><i class="material-icons">clear</i></span>
               </button>
-            <b>Announcement posted successfully!</b>
+            <b>{{ session()->get('status') }}!</b>
           </div>
         </div>
-        @endif
+        @endif @if(auth()->user()->hasRole(['admin', 'faculty']))
         <div class="card">
           <div class="card-body">
             <h4 class="card-title text-primary">Post Announcement</h4>
@@ -36,42 +43,58 @@
               @csrf
               <div class="row">
                 <div class="col-md-12">
+                  <input type="hidden" name="announcement_id" value="{{ $announcement ? $announcement->id : '' }}">
                   <div class="form-group bmd-form-group {{ $errors->has('title') ? ' has-danger' : '' }}">
                     <label class="bmd-label-floating">Title *</label>
-                    <input type="text" class="form-control" name="title" value="{{ old('title') }}" required/>
+                    <input type="text" class="form-control" name="title" value="{{ $announcement ? $announcement->title : old('title') }}" required/>
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group bmd-form-group">
-                    <label class="bmd-label-floating"> Content *</label>
-                    <textarea class="form-control" rows="2" name="content" value="{{ old('content') }}" required></textarea>
+                    <label class="bmd-label-floating">Content *</label>
+                    <textarea class="form-control" rows="2" name="content" required>{{ $announcement ? $announcement->content : '' }}</textarea>
                   </div>
                 </div>
               </div>
               <div class="col-md-12 text-right">
-                <button type="submit" class="btn btn-sm btn-warning">Post </button>
+                @if($announcement) <a href="{{ route('announcements.index') }}" class="btn btn-sm btn-warning">Cancel </a>                @endif
+                <button type="submit" class="btn btn-sm btn-warning">Submit </button>
               </div>
             </form>
           </div>
         </div>
 
         <div class="col-md-12 padding p-1"></div>
-
-        @foreach($announcements as $announcement)
+        @endif @foreach($announcements as $announcement)
         <div class="bd-example">
           <div class="card">
             <div class="card-header card-header-primary">
+              @if(auth()->user()->hasRole(['admin', 'faculty']))
+              <span class="actions float-right pt-2">
+                @if($announcement->isOwner() || auth()->user()->hasRole('admin'))
+                <a href="{{ route('announcements.destroy', $announcement->id) }}" class="text-white" onclick="event.preventDefault(); confirm('Are you sure you want to delete?') ? document.getElementById('delete-form').submit() : '' ">
+                    <i class="material-icons" style="font-size: 18px;">delete</i>
+                  </a>
+                  <form id="delete-form" action="{{ route('announcements.destroy', $announcement->id) }}" method="POST"  style="display: none;">
+                      @csrf
+                      {{ method_field('DELETE') }}
+                  </form>
+                @endif
+                @if($announcement && $announcement->isOwner())
+                  <a href="{{ route('announcements.edit', $announcement->id) }}" class="text-white">
+                    <i class="material-icons" style="font-size: 18px;">edit</i>
+                  </a>
+                @endif
+              </span> @endif
               <h4 class="card-title">{{ $announcement->title }}</h4>
-              <i class="material-icons" style="float: right; margin-top: -30px; font-size: 16px;">settings</i>
             </div>
             <div class="card-body">
-              <p>{{ $announcement->content }}</p>
               <div class="card-stats">
                 <div class="author">
                   <a href="#">
-                      <span class="text-warning">{{ $announcement->user->fullname() }}, {{ ucfirst(request()->user()->roles->first()->name) }}  ·  {{ $announcement->created_at->diffForHumans() }}</span>
+                      <span class="text-warning">{{ $announcement->user->fullname() }}, {{ ucfirst( $announcement->user->roles->first()->name) }}  ·  {{ $announcement->created_at->diffForHumans() }}</span>
                     </a>
                 </div>
                 <div class="stats ml-auto">
