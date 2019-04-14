@@ -187,6 +187,11 @@
                               </tr>
                             </thead>
                             <tbody>
+                              @if(!$subject->classes)
+                              <tr>
+                                <td colspan="6" style="text-align: center"> No records found.</td>
+                              </tr>
+                              @else
                               @foreach($subject->classes as $key => $class)
                               <tr>
                                 <td>{{ ++$key }}</td>
@@ -199,6 +204,8 @@
                                 </td>
                               </tr>
                               @endforeach
+                              @endif
+                              
                             </tbody>
                           </table>
                         </div>

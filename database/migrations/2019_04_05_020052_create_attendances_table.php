@@ -23,8 +23,8 @@ class CreateAttendancesTable extends Migration
             $table->date('conducted_at')->nullable();
             $table->timestamps();
 
-            $table->foreign('section_class_id')->references('id')->on('section_classes')->onDelete('set null');
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('set null');
+            $table->foreign('section_class_id')->references('id')->on('section_classes')->onDelete('cascade');
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
         });
     }
 

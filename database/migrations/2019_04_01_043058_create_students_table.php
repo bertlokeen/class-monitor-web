@@ -20,7 +20,7 @@ class CreateStudentsTable extends Migration
             $table->text('skills')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

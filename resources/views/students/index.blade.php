@@ -31,14 +31,13 @@
               <th>Program</th>
               <th>Year</th>
               <th>Section</th>
-              <th>Summary Rating</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             @if($students->count() == 0)
             <tr style="text-align: center">
-              <td colspan="8">
+              <td colspan="7">
                 No Records Found
               </td>
             </tr>
@@ -50,7 +49,6 @@
               <td>{{ $student->course }}</td>
               <td>{{ $student->year }}</td>
               <td>{{ $student->section }}</td>
-              <td>89%</td>
               <td>
                 <a href="{{ route('students.show', $student->id) }}"><i class="material-icons text-primary pr-2" onMouseOver='this.classList.remove("text-primary"); this.classList.add("text-warning");' onMouseOut='this.classList.add("text-primary");'>visibility</i></a>
               </td>

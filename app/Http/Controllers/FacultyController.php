@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Validator;
+use Carbon\Carbon;
 
 class FacultyController extends Controller
 {
@@ -46,7 +47,7 @@ class FacultyController extends Controller
             'address' => $request->get('address'),
             'father_name' => $request->get('father_name'),
             'mother_name' => $request->get('mother_name'),
-            'date_of_birth' => $request->get('date_of_birth'),
+            'date_of_birth' => Carbon::parse($request->get('date_of_birth')),
             'place_of_birth' => $request->get('place_of_birth')
         ]);
 

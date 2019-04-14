@@ -37,7 +37,7 @@
           <div class="card card-profile">
             <div class="card-avatar">
               <a href="#">
-                  <img class="img" src="../assets/img/faces/marc.jpg">
+                  <img class="img" src="{{ asset('assets/img/avatar.png') }}">
                 </a>
             </div>
             <div class="card-body">

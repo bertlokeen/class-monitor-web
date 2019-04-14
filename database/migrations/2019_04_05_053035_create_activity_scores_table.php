@@ -20,8 +20,8 @@ class CreateActivityScoresTable extends Migration
             $table->integer('score')->default(0)->nullable();
             $table->timestamps();
 
-            $table->foreign('activity_id')->references('id')->on('activities')->onDelete('set null');
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('set null');
+            $table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
         });
     }
 

@@ -22,8 +22,8 @@ class CreateSectionClassesTable extends Migration
             $table->string('section')->nullable();
             $table->timestamps();
 
-            $table->foreign('faculty_id')->references('id')->on('faculties')->onDelete('set null');
-            $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('set null');
+            $table->foreign('faculty_id')->references('id')->on('faculties')->onDelete('cascade');
+            $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
         });
     }
 

@@ -37,7 +37,7 @@
           <div class="card card-profile">
             <div class="card-avatar">
               <a href="#">
-                  <img class="img" src="../assets/img/faces/marc.jpg">
+                  <img class="img" src="{{ asset('assets/img/avatar.png') }}">
                 </a>
             </div>
             <div class="card-body">
@@ -80,13 +80,13 @@
                           <i class="material-icons">info</i> Information
                         </a>
                     </li>
-                    @if(auth()->user()->hasRole(['admin', 'faculty']))
+                    {{-- @if(auth()->user()->hasRole(['admin', 'faculty']))
                     <li class="nav-item">
                       <a class="nav-link" href="#classes" role="tab" data-toggle="tab">
                             <i class="material-icons">date_range</i> Classes
                           </a>
                     </li>
-                    @endif
+                    @endif --}}
                   </ul>
                 </div>
                 <div class="tab-content tab-space">
@@ -125,7 +125,7 @@
                       </div>
                     </div>
                   </div>
-                  @if(auth()->user()->hasRole(['admin', 'faculty']))
+                  {{-- @if(auth()->user()->hasRole(['admin', 'faculty']))
                   <div class="tab-pane" id="classes">
                     <div class="row">
                       <div class="col-md-12">
@@ -141,8 +141,7 @@
                               </tr>
                             </thead>
                             <tbody>
-                              @for($i = 0; $i
-                              <=9; $i++) <tr>
+                              @for($i = 0; $i <= 9; $i++) <tr>
                                 <td>{{ $i }}</td>
                                 <td>{{ $faculty->user->last_name }}, {{ $faculty->user->last_name }} {{ $faculty->user->middle_name
                                   }}
@@ -157,7 +156,7 @@
                       </div>
                     </div>
                   </div>
-                  @endif
+                  @endif --}}
                 </div>
               </div>
             </div>

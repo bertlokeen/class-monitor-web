@@ -17,9 +17,9 @@ class CreateSectionClassStudentTable extends Migration
             $table->unsignedInteger('section_class_id')->nullable();
             $table->unsignedInteger('student_id')->nullable();
 
-            $table->foreign('section_class_id')->references('id')->on('section_classes')->onDelete('set null');
+            $table->foreign('section_class_id')->references('id')->on('section_classes')->onDelete('cascade');
 
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('set null');
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
         });
     }
 

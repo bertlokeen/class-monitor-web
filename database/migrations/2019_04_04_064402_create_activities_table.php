@@ -23,7 +23,7 @@ class CreateActivitiesTable extends Migration
             $table->string('time')->nullable();
             $table->timestamps();
 
-            $table->foreign('section_class_id')->references('id')->on('section_classes')->onDelete('set null');
+            $table->foreign('section_class_id')->references('id')->on('section_classes')->onDelete('cascade');
         });
     }
 

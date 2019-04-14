@@ -110,7 +110,7 @@
           <div class="col-md-6">
             <div class="form-group bmd-form-group is-filled">
               <label class="label-control bmd-label-static">Date of Birth</label>
-              <input type="text" class="form-control" name="date_of_birth" value="{{ old('date_of_birth') }}" />
+              <input type="date" class="form-control" name="date_of_birth" value="{{ old('date_of_birth') }}" />
             </div>
           </div>
           <div class="col-md-6">
