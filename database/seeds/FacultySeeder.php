@@ -16,7 +16,7 @@ class FacultySeeder extends Seeder
     {
         $faker = Faker::create();
 
-        for ($i = 0; $i <= 10; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             $user = User::create([
                 'first_name' => $faker->firstName($gender = 'male'|'female'),
                 'middle_name' => $faker->lastName($gender = 'male'|'female'), 
