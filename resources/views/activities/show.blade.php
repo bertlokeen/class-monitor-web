@@ -7,7 +7,7 @@
       }} </a>
     </li>
     <li class="breadcrumb-item text-primary" aria-current="page"><a href="{{ route('classes.show', $activity->sectionClass->id) }}">Activities</a></li>
-    <li class="breadcrumb-item text-warning" aria-current="page">{{ $activity->name }}</li>
+    <li class="breadcrumb-item text-warning" aria-current="page">{{ $activity->activity_name }}</li>
   </ol>
 </nav>
 @endsection

@@ -357,6 +357,14 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group bmd-form-group">
+                <label class="bmd-label-floating">Lesson</label>
+                <input type="text" class="form-control" name="lesson" value="{{ old('lesson') }}" required/>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group bmd-form-group">
                 <label class="bmd-label-floating">Activity Name</label>
                 <input type="text" class="form-control" name="name" value="{{ old('name') }}" required/>
               </div>

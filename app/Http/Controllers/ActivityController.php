@@ -32,6 +32,7 @@ class ActivityController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'period' => 'required',
+            'lesson' => 'required',
             'name' => 'required',
             'type' => 'required',
             'items' => 'required',
@@ -50,7 +51,8 @@ class ActivityController extends Controller
         $activity = Activity::create([
             'section_class_id' => $class->id,
             'period' => $request->get('period'),
-            'name' => $request->get('name'),
+            'lesson' => $request->get('lesson'),
+            'activity_name' => $request->get('name'),
             'type' => $request->get('type'),
             'items' => $request->get('items'),
             'time' => $request->get('schedule')['time']['hours'] . ':' . $request->get('schedule')['time']['minutes'] . ' ' . $request->get('schedule')['time']['daytime']
