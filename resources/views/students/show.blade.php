@@ -4,8 +4,9 @@
   <ol class="breadcrumb">
     @if(auth()->user()->hasRole(['admin', 'faculty']))
     <li class="breadcrumb-item"><a href="{{ route('students.index') }}">Students</a></li>
-    @endif
+    @else
     <li class="breadcrumb-item text-primary">Students</li>
+    @endif
     <li class="breadcrumb-item text-warning" aria-current="page">{{ $student->user->fullname() }}</li>
   </ol>
 </nav>
@@ -134,40 +135,53 @@
                   </div>
                   <div class="tab-pane" id="attendance-rating">
                     <div class="row">
-                      @if(auth()->user()->hasRole(['admin', 'student']))
-                      <div class="col-md-12">
-                        <a href="{{ route('students.attendance-log', $student->id) }}" class="btn btn-warning" style="float: center">
-                            <i class="material-icons">visibility</i> View Attendance Log
-                        </a>
-                      </div>
-                      @endif @foreach ($performanceData['attendance'] as $key => $term)
-                      <div class="col-md-12 m-0 p-0">
-                        <hr>
-                      </div>
-                      <div class="col-md-9 m-auto">
-                        <h3>{{ ucfirst($key) }}</h3>
-                        <canvas id="attendance-chart-{{ $key }}"></canvas>
-                      </div>
-                      <div class="col-md-3">
-                        <h3>Data</h3>
-                        @foreach ($term as $key => $t)
-                        <p>{{ ucfirst($key ) }} : <b>{{ $t }}</b></p>
+                      @if(count($performanceData['attendance']))
+                        @if(auth()->user()->hasRole(['admin', 'student']))
+                          <div class="col-md-12">
+                            <a href="{{ route('students.attendance-log', $student->id) }}" class="btn btn-warning" style="float: center">
+                                <i class="material-icons">visibility</i> View Attendance Log
+                            </a>
+                          </div>
+                        @endif
+                        @foreach ($performanceData['attendance'] as $key => $term)
+                          <div class="col-md-12 m-0 p-0">
+                            <hr>
+                          </div>
+                          <div class="col-md-9 m-auto">
+                            <h3>{{ ucfirst($key) }}</h3>
+                            <canvas id="attendance-chart-{{ $key }}"></canvas>
+                          </div>
+                          <div class="col-md-3">
+                            <h3>Data</h3>
+                            @foreach ($term as $key => $t)
+                            <p>{{ ucfirst($key ) }} : <b>{{ $t }}</b></p>
+                            @endforeach
+                          </div>
                         @endforeach
-                      </div>
-                      @endforeach
+                      @else
+                        <div class="col-md-12">
+                          <h3>No data available.</h3>
+                        </div>
+                      @endif
                     </div>
                   </div>
                   <div class="tab-pane" id="performance">
                     <div class="row">
-                      <div class="col-md-12">
-                        <canvas id="performance-chart"></canvas>
-                      </div>
-                      <div class="col-md-12">
-                        <h3>Data</h3>
-                        @foreach ($performanceData['performance'] as $key => $performance)
-                        <b>{{ ucfirst($key) }}</b> @foreach ($performance as $key2 => $p)
-                        <p>{{ ucfirst($key2) }} : <b>{{ $p }}</b></p>@endforeach @endforeach
-                      </div>
+                      @if(count($performanceData['performance']))
+                        <div class="col-md-12">
+                          <canvas id="performance-chart"></canvas>
+                        </div>
+                        <div class="col-md-12">
+                          <h3>Data</h3>
+                          @foreach ($performanceData['performance'] as $key => $performance)
+                          <b>{{ ucfirst($key) }}</b> @foreach ($performance as $key2 => $p)
+                          <p><a href="{{ route('subjects.show-by-name', strtolower($key2)) }}"> {{ ucfirst($key2) }}</a> : <b>{{ round($p, 2) }}%</b></p>@endforeach @endforeach
+                        </div>
+                      @else
+                        <div class="col-md-12">
+                          <h3>No data available.</h3>
+                        </div>
+                      @endif 
                     </div>
                   </div>
                 </div>

@@ -17,7 +17,7 @@ class CreateActivitiesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('section_class_id')->nullable();
             $table->string('period')->nullable();
-            $table->string('name')->nullable();
+            $table->string('activity_name')->nullable();
             $table->string('type')->nullable();
             $table->integer('items')->nullable();
             $table->string('time')->nullable();

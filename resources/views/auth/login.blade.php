@@ -86,17 +86,17 @@
 
                         <div class="footer text-center">
                             <button type="submit" class="btn btn-warning">Sign In</button>
-{{--                            <a class="btn btn-warning" href="{{ route('register') }}">Sign Up</a>--}}
                         </div>
-                        <div class="footer text-center">
+                        {{-- <div class="footer text-center">
                             <a href="{{ route('password.request') }}">Forgot password?</a>
-                        </div>
+                        </div> --}}
                     </form>
                 </div>
             </div>
 
             <div class="col-md-6">
-                <h1>LOGO HERE</h1>
+                <h1>CLASS MONITOR</h1>
+                <h2>Some Information About the System Here.</h2>
             </div>
         </div>
     </div>

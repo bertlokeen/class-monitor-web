@@ -57,8 +57,15 @@
               <div class="col-md-12">
                 <div class="row">
                   <ul class="nav nav-pills nav-pills-icons justify-content-left" role="tablist">
+                    @if(auth()->user()->hasRole('student'))
                     <li class="nav-item">
-                      <a class="nav-link active" href="#information" role="tab" data-toggle="tab">
+                      <a class="nav-link active" href="#records" role="tab" data-toggle="tab">
+                        <i class="material-icons">info</i> Records
+                      </a>
+                    </li>
+                    @endif
+                    <li class="nav-item">
+                      <a class="nav-link {{ !auth()->user()->hasRole('student') ? 'active' : '' }}" href="#information" role="tab" data-toggle="tab">
                           <i class="material-icons">info</i> Information
                         </a>
                     </li>
@@ -72,7 +79,56 @@
                   </ul>
                 </div>
                 <div class="tab-content tab-space">
-                  <div class="tab-pane active" id="information">
+                  <div class="tab-pane active" id="records">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <hr>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <h3>{{ $subject->name }}</h3>
+                            <p><a href="{{ route('faculty.show', $subject->faculty->id) }}">{{ $subject->faculty->user->fullname() }}</a></p>
+                            <p>Units : {{ $subject->units }}</p>
+                            @if($records)
+                              <hr>
+                                @foreach ($records as $key => $record)
+                                <table class="table table-hover table-bordered">
+                                  <thead class="text-primary">
+                                    <tr>
+                                    <th colspan="3">{{ ucfirst($key) }}</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    @foreach ($record as $lesson => $items)
+                                      <tr>
+                                        <td colspan="3">{{ $lesson }}</td>
+                                      </tr>
+                                      @foreach ($items as $activities)
+                                        @foreach ($activities as $activity)
+                                        <tr>
+                                          <td></td>
+                                          <td>{{ $activity['activity_name'] }}</td>
+                                          <td>{{ $activity['score'] }} / {{ $activity['items'] }}</td>
+                                        </tr>
+                                        @endforeach
+                                      @endforeach
+                                    @endforeach
+                                    
+                                  <tfoot>
+                                    <tr>
+                                      <td colspan="2">{{ ucfirst($key) }} Grade</td>
+                                      <td><span class="text-primary"><b>{{ round($performanceRating[$key], 2) }}%</b></span></td>
+                                    </tr>
+                                  </tfoot>
+                                </table>
+                                <hr>
+                              @endforeach
+                            @endif
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane" id="information">
                     <div class="row">
                       <div class="col-md-12">
                         <hr>

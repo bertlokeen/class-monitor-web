@@ -33,7 +33,7 @@
           <tbody>
             @if($faculties->count() == 0)
             <tr style="text-align: center">
-              <td colspan="3">
+              <td colspan="4">
                 No Records Found
               </td>
             </tr>

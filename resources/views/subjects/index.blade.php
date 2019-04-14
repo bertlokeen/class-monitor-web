@@ -37,7 +37,7 @@
           <tbody>
             @if($subjects->count() == 0)
             <tr style="text-align: center">
-              <td colspan="6">
+              <td colspan="7">
                 No Records Found
               </td>
             </tr>

@@ -50,7 +50,9 @@ Route::group(['middleware' => 'auth'], function() {
     
     Route::resource('/subjects', 'SubjectController');
 
-    Route::get('/subjects/{subject}/edit', 'SubjectController@edit')->middleware('role:admin');
+    Route::get('/subjects/{name}/show-by-name', 'SubjectController@showByName')->name('subjects.show-by-name')->middleware('role:student');
+
+    Route::get('/subjects/{subject}/edit', 'SubjectController@edit')->name('subjects.edit')->middleware('role:admin');
 
     Route::resource('/classes', 'SectionClassController');
 

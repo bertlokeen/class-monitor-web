@@ -81,17 +81,34 @@ class StudentController extends Controller
 
     public function show(Student $student)
     {
+        $activityTypes = [
+            'Quiz' => 0.1,
+            'Recitation' => 0.2,
+            'Practical' => 0.2,
+            'Major Exam' => 0.5
+        ];
+
         $activityScores = ActivityScore::where('student_id', $student->id)
             ->join('activities', 'activity_scores.activity_id', '=', 'activities.id')
             ->join('section_classes', 'activities.section_class_id', '=', 'section_classes.id')
             ->join('subjects', 'section_classes.subject_id', '=', 'subjects.id')
-            ->get()->groupBy(['period', 'name']);
+            ->get()->groupBy(['period', 'name', 'type']);
  
-        $performanceRating = $activityScores->map(function ($val) {
-            return $val->map(function ($val2) {
-                return $val2->avg('score');
+        $performanceRating = $activityScores->map(function ($val) use ($activityTypes) {
+            return $val->map(function ($val2) use ($activityTypes) {
+                return $val2->map(function ($val3, $i) use ($activityTypes) {
+                    if(isset($activityTypes[$i])) {
+                        $percent = $val3->map(function ($val4) {
+                            return $val4['score'] /  $val4['items'];
+                        })->avg() * $activityTypes[$i];
+
+                        return $percent * 100;
+                    }
+                })->sum();
             });
         });
+
+        // return $performanceRating;
 
         $attendanceData =  $student->attendances->groupBy(['period', 'conducted_at', 'status'])->map(function($val) {
             return $val->map(function ($val2) {
