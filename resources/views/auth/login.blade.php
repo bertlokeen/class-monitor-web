@@ -96,8 +96,7 @@
 
             <div class="col-md-6">
                 <h1>CLASS MONITOR</h1>
-                <h2>Some Information About the System Here.</h2>
-                <h2>Another description to describe the site.</h2>
+                <h2>Information Management and Student Performance Monitoring System.</h2>
             </div>
         </div>
     </div>

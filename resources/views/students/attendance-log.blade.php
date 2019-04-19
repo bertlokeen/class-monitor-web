@@ -49,8 +49,12 @@
                 ['present', 'absent'])))
                 <b><span class="text-warning">Partial</span></b> @endif
               </td>
-              <td>@foreach ($period as $key2 => $l) @if(!empty($l['note'])) @if($loop->first) {{ $l['note'] }} @else {{ ', '
-                . $l['note'] }} @endif @endif @endforeach
+              <td>
+                @foreach ($period as $key2 => $l) 
+                  @if(!empty($l['note'])) 
+                    [ {{ $l['note'] }} ]
+                  @endif
+                @endforeach
               </td>
             </tr>
 

@@ -67,6 +67,30 @@ class SubjectController extends Controller
         return redirect()->route('subjects.show', $subject->id)->with('status', 'created');
     }
 
+    public function getPerformanceRating($ratings)
+    {
+        $activityTypes = [
+            'Quiz' => 0.1,
+            'Recitation' => 0.2,
+            'Practical' => 0.2,
+            'Major Exam' => 0.5
+        ];
+
+        $performanceRating = $ratings->map(function ($val) use ($activityTypes) {
+            return $val->map(function ($val2, $i) use ($activityTypes) {
+                if(isset($activityTypes[$i])) {
+                    $percent = $val2->map(function ($val3) {
+                        return $val3['score'] /  $val3['items'];
+                    })->avg() * $activityTypes[$i];
+
+                    return $percent * 100;
+                }
+            })->sum();
+        });
+
+        return $performanceRating;
+    }
+
     public function show(Subject $subject)
     {
         $records = null;
@@ -75,18 +99,25 @@ class SubjectController extends Controller
             $student = Student::find(request()->user()->student->id);
             $sectionClass = $student->classes->where('subject_id', $subject->id)->first();
 
-            $records = ActivityScore::where('student_id', $student->id)
+            $sheet = ActivityScore::where('student_id', $student->id)
                 ->join('activities', 'activity_scores.activity_id', '=', 'activities.id')
                 ->join('section_classes', 'activities.section_class_id', '=', 'section_classes.id')
                 ->join('subjects', function ($queryJoin) use ($subject) {
                     $queryJoin->on('section_classes.subject_id', '=', 'subjects.id');
                     $queryJoin->where('subjects.id', '=', $subject->id);
-                })->get()->groupBy(['period', 'lesson', 'type']);
+                })->get();
+
+            
+            $records = $sheet->groupBy(['period', 'lesson', 'type']);
+
+            $ratings = $sheet->groupBy(['period', 'type']);
+    
+            $performanceRating = $this->getPerformanceRating($ratings);
 
             // return $records;
         }
 
-        return view('subjects.show', compact('subject', 'records'));
+        return view('subjects.show', compact('subject', 'records', 'performanceRating'));
     }
 
     public function showByName($name)
@@ -99,13 +130,6 @@ class SubjectController extends Controller
             if (!$subject) {
                 return abort(404);
             }
-            
-            $activityTypes = [
-                'Quiz' => 0.1,
-                'Recitation' => 0.2,
-                'Practical' => 0.2,
-                'Major Exam' => 0.5
-            ];
 
             $student = Student::find(request()->user()->student->id);
             $sectionClass = $student->classes->where('subject_id', $subject->id)->first();
@@ -122,17 +146,7 @@ class SubjectController extends Controller
 
             $ratings = $sheet->groupBy(['period', 'type']);
 
-            $performanceRating = $ratings->map(function ($val) use ($activityTypes) {
-                return $val->map(function ($val2, $i) use ($activityTypes) {
-                    if(isset($activityTypes[$i])) {
-                        $percent = $val2->map(function ($val3) {
-                            return $val3['score'] /  $val3['items'];
-                        })->avg() * $activityTypes[$i];
-
-                        return $percent * 100;
-                    }
-                })->sum();
-            });
+            $performanceRating = $this->getPerformanceRating($ratings);
         }
 
         return view('subjects.show', compact('subject', 'records', 'performanceRating'));
