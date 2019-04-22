@@ -66,6 +66,8 @@ class SectionClassController extends Controller
     {
         $students = Student::all();
 
+        $classStudents = $class->students->pluck('id')->toArray();
+
         $activityTypes = ['Quiz', 'Recitation', 'Practical', 'Major Exam'];
 
         $attendances = [];
@@ -76,7 +78,7 @@ class SectionClassController extends Controller
 
         $activities = $class->activities;
 
-        return view('classes.show', compact('class', 'students', 'activityTypes', 'attendances'));
+        return view('classes.show', compact('class', 'students', 'activityTypes', 'attendances','classStudents'));
     }
 
     public function edit(Request $request, SectionClass $class)
@@ -128,19 +130,13 @@ class SectionClassController extends Controller
 
     public function assignStudent(Request $request, $class_id)
     {
+        // return collect($request->get('students'))->keys();
+
         $class = SectionClass::find($class_id);
-        
-        $validator = Validator::make($request->all(), [
-            'student' => 'required'
-        ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator->errors())->withInput();
-        }
+        $class->students()->sync(collect($request->get('students'))->keys());
 
-        $class->students()->attach($request->get('student'));
-
-        return redirect()->back()->with('status', 'Student assigned successfully!');
+        return redirect()->back()->with('status', 'Students assigned successfully!');
     }
 
     public function unAssignStudent($class_id, $student_id)

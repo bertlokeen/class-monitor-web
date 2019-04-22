@@ -309,13 +309,19 @@
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
-                <label class="label">Student</label>
-                <select id="instructor" class="form-control" name="student">
-                    <option value=""> -- </option>
-                    @foreach ($students as $student)
-                      <option value="{{ $student->id }}">{{ $student->user->fullname() }}</option>
-                    @endforeach
-                  </select>
+                <label class="label">Students</label>
+                  @foreach ($students as $student)
+                  <div class="col-md-12">
+                    <div class="form-check">
+                      <label class="form-check-label ml-3 mb-2">
+                        <input class="form-check-input" type="checkbox" name="students[{{ $student->id }}]" {{ in_array($student->id, $classStudents) ? 'checked' : '' }}> {{ $student->user->fullname() }}
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  @endforeach
               </div>
             </div>
           </div>
