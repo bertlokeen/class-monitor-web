@@ -120,6 +120,9 @@
                         <button id="add-students" class="btn btn-warning" style="float: center">
                               <i class="material-icons">add</i> Assign Students
                             </button> @endif
+                          <a href="{{ route('export.pdf', $class->id) }}" class="btn btn-warning" style="float: center">
+                          <i class="material-icons">add</i> Export to PDF
+                        </a>
                         <div class="clearfix"></div>
                         <hr>
                         <div class="table-responsive">
@@ -128,21 +131,30 @@
                               <tr>
                                 <th>#</th>
                                 <th>Student</th>
+                                <th>Final Grade</th>
+                                <th>Status</th>
                                 <th>Action</th>
                               </tr>
                             </thead>
                             <tbody>
                               @if($class->students->count() == 0)
                               <tr>
-                                <td colspan="3" style="text-align: center">No Records Found</td>
+                                <td colspan="5" style="text-align: center">No Records Found</td>
                               </tr>
                               @endif @foreach($class->students as $key => $student)
                               <tr>
                                 <td>{{ ++$key }}</td>
                                 <td>{{ $student->user->fullname() }}</td>
+                                <td><b>{{ round($student->grade($class->subject->id), 2) }}%</b></td>
+                                <td>{{ $student->grade($class->subject->id) < 75 ? 'Failed' : 'Passed'}}</td>
                                 <td>
-                                  <a href="{{ route('students.show', $student->id) }}"><i class="material-icons text-primary pr-2" onMouseOver='this.classList.remove("text-primary"); this.classList.add("text-warning");' onMouseOut='this.classList.add("text-primary");'>visibility</i></a>                                  @if(auth()->user()->hasRole('admin'))
-                                  <a href="{{ route('classes.un-assign-student', [$class->id, $student->id]) }}"><i class="material-icons text-primary pr-2" onMouseOver='this.classList.remove("text-primary"); this.classList.add("text-warning");' onMouseOut='this.classList.add("text-primary");'>clear</i></a>                                  @endif
+                                  <a href="{{ route('students.show', $student->id) }}"><i class="material-icons text-primary pr-2" onMouseOver='this.classList.remove("text-primary"); this.classList.add("text-warning");' onMouseOut='this.classList.add("text-primary");'>visibility</i></a>
+                                  @if(auth()->user()->hasRole('admin'))
+                                    <a href="{{ route('classes.un-assign-student', [$class->id, $student->id]) }}"><i class="material-icons text-primary pr-2" onMouseOver='this.classList.remove("text-primary"); this.classList.add("text-warning");' onMouseOut='this.classList.add("text-primary");'>clear</i></a>
+                                  @endif
+                                  @if(in_array($class->subject->name, auth()->user()->faculty->subjectNames()))
+                                    <a class="btn btn-primary btn-sm" href="{{ route('subjects.show-grade-sheet', [strtolower($class->subject->name), $student->id]) }}">View Sheet</a>
+                                  @endif
                                 </td>
                               </tr>
                               @endforeach

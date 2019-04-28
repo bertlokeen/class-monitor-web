@@ -44,4 +44,57 @@ class Student extends Model
     {
         return $this->hasMany(ActivityScore::class);
     }
+
+    public function getPerformanceRating($ratings)
+    {
+        $activityTypes = [
+            'Quiz' => 0.1,
+            'Recitation' => 0.2,
+            'Practical' => 0.2,
+            'Major Exam' => 0.5
+        ];
+
+        $performanceRating = $ratings->map(function ($val) use ($activityTypes) {
+            return $val->map(function ($val2, $i) use ($activityTypes) {
+                if(isset($activityTypes[$i])) {
+                    $percent = $val2->map(function ($val3) {
+                        return $val3['score'] /  $val3['items'];
+                    })->avg() * $activityTypes[$i];
+
+                    return $percent * 100;
+                }
+            })->sum();
+        });
+
+        return $performanceRating;
+    }
+
+    public function ratings($subjectId)
+    {
+        $records = null;
+
+        $student = Student::find($this->id);
+        $sectionClass = $student->classes->where('subject_id', $subjectId)->first();
+
+        $sheet = ActivityScore::where('student_id', $student->id)
+            ->join('activities', 'activity_scores.activity_id', '=', 'activities.id')
+            ->join('section_classes', 'activities.section_class_id', '=', 'section_classes.id')
+            ->join('subjects', function ($queryJoin) use ($subjectId) {
+                $queryJoin->on('section_classes.subject_id', '=', 'subjects.id');
+                $queryJoin->where('subjects.id', '=', $subjectId);
+            })->get();
+
+        $records = $sheet->groupBy(['period', 'lesson', 'type']);
+
+        $ratings = $sheet->groupBy(['period', 'type']);
+
+        $performanceRating = $this->getPerformanceRating($ratings);
+        
+        return $performanceRating;
+    }
+
+    public function grade($subjectId)
+    {
+        return collect($this->ratings($subjectId))->avg();
+    }
 }

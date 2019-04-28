@@ -57,7 +57,7 @@
               <div class="col-md-12">
                 <div class="row">
                   <ul class="nav nav-pills nav-pills-icons justify-content-left" role="tablist">
-                    @if(auth()->user()->hasRole('student'))
+                    @if(auth()->user()->hasRole(['student', 'faculty']))
                     <li class="nav-item">
                       <a class="nav-link active" href="#records" role="tab" data-toggle="tab">
                         <i class="material-icons">info</i> Records
@@ -65,7 +65,7 @@
                     </li>
                     @endif
                     <li class="nav-item">
-                      <a class="nav-link {{ !auth()->user()->hasRole('student') ? 'active' : '' }}" href="#information" role="tab" data-toggle="tab">
+                      <a class="nav-link {{ !auth()->user()->hasRole(['student', 'faculty']) ? 'active' : '' }}" href="#information" role="tab" data-toggle="tab">
                           <i class="material-icons">info</i> Information
                         </a>
                     </li>
@@ -88,6 +88,9 @@
                             <h3>{{ $subject->name }}</h3>
                             <p><a href="{{ route('faculty.show', $subject->faculty->id) }}">{{ $subject->faculty->user->fullname() }}</a></p>
                             <p>Units : {{ $subject->units }}</p>
+                            @if(isset($performanceRating))
+                              <p>Final Grade: <b>{{ round(collect($performanceRating)->avg(), 2) }}%</b></p>
+                            @endif
                             @if($records)
                               <hr>
                                 @foreach ($records as $key => $record)

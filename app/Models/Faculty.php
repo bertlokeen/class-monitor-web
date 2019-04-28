@@ -34,4 +34,9 @@ class Faculty extends Model
 
         return Student::whereIn('id', $ids);
     }
+
+    public function subjectNames()
+    {
+        return $this->subjects->pluck('name')->toArray();
+    }
 }

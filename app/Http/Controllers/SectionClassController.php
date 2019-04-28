@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Validator;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class SectionClassController extends Controller
 {
@@ -130,8 +131,6 @@ class SectionClassController extends Controller
 
     public function assignStudent(Request $request, $class_id)
     {
-        // return collect($request->get('students'))->keys();
-
         $class = SectionClass::find($class_id);
 
         $class->students()->sync(collect($request->get('students'))->keys());
@@ -153,5 +152,16 @@ class SectionClassController extends Controller
     public function addActivity(Request $request, $class_id)
     {
         return $request->all();
+    }
+
+    public function exportToPdf($class_id)
+    {
+        $class = SectionClass::find($class_id);
+
+        // return view('reports.student-grades', compact('class'));
+
+        $pdf = PDF::loadView('reports.student-grades', ['class' => $class]);
+
+        return $pdf->download('grade-sheets.pdf');
     }
 }

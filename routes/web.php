@@ -50,6 +50,8 @@ Route::group(['middleware' => 'auth'], function() {
     
     Route::resource('/subjects', 'SubjectController');
 
+    Route::get('/subjects/{name}/student/{id}', 'SubjectController@showGradingSheet')->name('subjects.show-grade-sheet')->middleware('role:faculty');
+
     Route::get('/subjects/{name}/show-by-name', 'SubjectController@showByName')->name('subjects.show-by-name')->middleware('role:student');
 
     Route::get('/subjects/{subject}/edit', 'SubjectController@edit')->name('subjects.edit')->middleware('role:admin');
@@ -69,4 +71,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/activities/{activity}', 'ActivityController@show')->name('activity.show');
 
     Route::post('/activities/{activity}/store-score', 'ActivityController@storeScores')->name('activity.store-scores');
+
+    Route::get('/reports/{class_id}/student-grades', 'SectionClassController@exportToPdf')->name('export.pdf');
 });

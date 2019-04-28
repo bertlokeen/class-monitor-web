@@ -106,15 +106,12 @@ class SubjectController extends Controller
                     $queryJoin->on('section_classes.subject_id', '=', 'subjects.id');
                     $queryJoin->where('subjects.id', '=', $subject->id);
                 })->get();
-
-            
+ 
             $records = $sheet->groupBy(['period', 'lesson', 'type']);
 
             $ratings = $sheet->groupBy(['period', 'type']);
     
             $performanceRating = $this->getPerformanceRating($ratings);
-
-            // return $records;
         }
 
         return view('subjects.show', compact('subject', 'records', 'performanceRating'));
@@ -132,6 +129,38 @@ class SubjectController extends Controller
             }
 
             $student = Student::find(request()->user()->student->id);
+            $sectionClass = $student->classes->where('subject_id', $subject->id)->first();
+
+            $sheet = ActivityScore::where('student_id', $student->id)
+                ->join('activities', 'activity_scores.activity_id', '=', 'activities.id')
+                ->join('section_classes', 'activities.section_class_id', '=', 'section_classes.id')
+                ->join('subjects', function ($queryJoin) use ($subject) {
+                    $queryJoin->on('section_classes.subject_id', '=', 'subjects.id');
+                    $queryJoin->where('subjects.id', '=', $subject->id);
+                })->get();
+
+            $records = $sheet->groupBy(['period', 'lesson', 'type']);
+
+            $ratings = $sheet->groupBy(['period', 'type']);
+
+            $performanceRating = $this->getPerformanceRating($ratings);
+        }
+
+        return view('subjects.show', compact('subject', 'records', 'performanceRating'));
+    }
+
+    public function showGradingSheet($name, $id)
+    {
+        $records = null;
+
+        if (request()->user()->hasRole('faculty')) {
+            $subject = Subject::where('name', $name)->first();
+
+            if (!$subject) {
+                return abort(404);
+            }
+
+            $student = Student::find($id);
             $sectionClass = $student->classes->where('subject_id', $subject->id)->first();
 
             $sheet = ActivityScore::where('student_id', $student->id)

@@ -174,8 +174,15 @@
                         <div class="col-md-12">
                           <h3>Data</h3>
                           @foreach ($performanceData['performance'] as $key => $performance)
-                          <b>{{ ucfirst($key) }}</b> @foreach ($performance as $key2 => $p)
-                          <p><a href="{{ route('subjects.show-by-name', strtolower($key2)) }}"> {{ ucfirst($key2) }}</a> : <b>{{ round($p, 2) }}%</b></p>@endforeach @endforeach
+                            <b>{{ ucfirst($key) }}</b> 
+                            @foreach ($performance as $key2 => $p)
+                              <p><a href="{{ route('subjects.show-by-name', strtolower($key2)) }}"> {{ ucfirst($key2) }}</a> : <b>{{ round($p, 2) }}%</b>
+                                @if(in_array($key2, auth()->user()->faculty->subjectNames()))
+                                <a class="btn btn-primary btn-sm" href="{{ route('subjects.show-grade-sheet', [strtolower($key2), $student->id]) }}">View Sheet</a>
+                                @endif
+                              </p>
+                            @endforeach
+                          @endforeach
                         </div>
                       @else
                         <div class="col-md-12">
