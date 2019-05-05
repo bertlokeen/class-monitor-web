@@ -177,8 +177,12 @@
                             <b>{{ ucfirst($key) }}</b> 
                             @foreach ($performance as $key2 => $p)
                               <p><a href="{{ route('subjects.show-by-name', strtolower($key2)) }}"> {{ ucfirst($key2) }}</a> : <b>{{ round($p, 2) }}%</b>
-                                @if(in_array($key2, auth()->user()->faculty->subjectNames()))
-                                <a class="btn btn-primary btn-sm" href="{{ route('subjects.show-grade-sheet', [strtolower($key2), $student->id]) }}">View Sheet</a>
+                                @if(isset(auth()->user()->faculty))
+                                  @if(auth()->user()->hasRole('faculty'))
+                                    @if(in_array($key2, auth()->user()->faculty->subjectNames()))
+                                      <a class="btn btn-primary btn-sm" href="{{ route('subjects.show-grade-sheet', [strtolower($key2), $student->id]) }}">View Sheet</a>
+                                    @endif
+                                  @endif
                                 @endif
                               </p>
                             @endforeach
