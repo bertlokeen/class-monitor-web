@@ -152,8 +152,10 @@
                                   @if(auth()->user()->hasRole('admin'))
                                     <a href="{{ route('classes.un-assign-student', [$class->id, $student->id]) }}"><i class="material-icons text-primary pr-2" onMouseOver='this.classList.remove("text-primary"); this.classList.add("text-warning");' onMouseOut='this.classList.add("text-primary");'>clear</i></a>
                                   @endif
-                                  @if(in_array($class->subject->name, auth()->user()->faculty->subjectNames()))
-                                    <a class="btn btn-primary btn-sm" href="{{ route('subjects.show-grade-sheet', [strtolower($class->subject->name), $student->id]) }}">View Sheet</a>
+                                  @if(auth()->user()->hasRole('faculty'))
+                                    @if(in_array($class->subject->name, auth()->user()->faculty->subjectNames()))
+                                      <a class="btn btn-primary btn-sm" href="{{ route('subjects.show-grade-sheet', [strtolower($class->subject->name), $student->id]) }}">View Sheet</a>
+                                    @endif
                                   @endif
                                 </td>
                               </tr>
