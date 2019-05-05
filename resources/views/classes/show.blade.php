@@ -154,11 +154,11 @@
                                   @endif
                                   {{ isset(auth()->user()->faculty) ? auth()->user()->faculty->subjectNames() : 'test' }}
                                   {{-- @if(isset(auth()->user()->faculty)) --}}
-                                    @if(!auth()->user()->hasRole('admin'))
-                                      @if(in_array($class->subject->name, auth()->user()->faculty->subjectNames()))
+                                    {{-- @if(!auth()->user()->hasRole('admin')) --}}
+                                      @if(in_array($class->subject->name, isset(auth()->user()->faculty) && auth()->user()->faculty ? auth()->user()->faculty->subjectNames() : []))
                                         <a class="btn btn-primary btn-sm" href="{{ route('subjects.show-grade-sheet', [strtolower($class->subject->name), $student->id]) }}">View Sheet</a>
                                       @endif
-                                    @endif
+                                    {{-- @endif --}}
                                   {{-- @endif --}}
                                 </td>
                               </tr>
